@@ -90,10 +90,13 @@ _raw_db_url = os.environ.get("DATABASE_URL", "").strip()
 if _raw_db_url:
     DATABASES = {"default": env.db_url_config(_raw_db_url)}
 else:
+    _sqlite_path = (
+        Path("/tmp/db.sqlite3") if os.environ.get("VERCEL") else BASE_DIR / "db.sqlite3"
+    )
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
+            "NAME": _sqlite_path,
         }
     }
 
