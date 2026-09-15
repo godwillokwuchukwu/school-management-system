@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
 import { api } from './api'
 import SchoolCrest from './public/components/SchoolCrest'
 

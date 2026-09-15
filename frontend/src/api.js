@@ -1,4 +1,10 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  (typeof window !== 'undefined' &&
+  window.location.hostname !== 'localhost' &&
+  window.location.hostname !== '127.0.0.1'
+    ? '/api'
+    : 'http://localhost:8000/api')
 const ACCESS_TOKEN_KEY = 'access_token'
 const REFRESH_TOKEN_KEY = 'refresh_token'
 
@@ -64,7 +70,7 @@ function list(payload) {
   return Array.isArray(payload) ? payload : payload?.results || []
 }
 
-export const api = {
+const api = {
   isAuthenticated: () => Boolean(getAccessToken()),
   logout: clearTokens,
   async login(username, password) {
@@ -120,7 +126,7 @@ export const api = {
   createStudent: (body) => { const parts = (body.name || `${body.first_name || ''} ${body.last_name || ''}`).trim().split(/\s+/); return request('/students/students/', { method: 'POST', body: JSON.stringify({ ...body, first_name: body.first_name || parts.shift(), last_name: body.last_name || parts.join(' '), admission_number: body.admission_number || body.admission, dob: body.dob || '2010-01-01' }) }) },
   updateStudent: (id, body) => request(`/students/students/${id}/`, { method: 'PATCH', body: JSON.stringify(body) }),
   
-  activateAccount: (token, password) => request('/accounts/activate/', { method: 'POST', body: JSON.stringify({ token, password }) }),
+  activateAccount: (token, password) => request('/auth/activate/', { method: 'POST', body: JSON.stringify({ token, password }) }),
   adminProvisionAccount: (data) => request('/accounts/admin/provision/', { method: 'POST', body: JSON.stringify(data) }),
   adminSuspendProfile: (id) => request(`/accounts/profiles/${id}/suspend/`, { method: 'POST' }),
   adminReactivateProfile: (id) => request(`/accounts/profiles/${id}/reactivate/`, { method: 'POST' }),
@@ -157,4 +163,6 @@ export const api = {
   },
 }
 
-export { API_URL, list }
+export { api, API_URL, list }
+export default api
+

@@ -1,16 +1,12 @@
-import { useState, useEffect } from 'react'
-import { api, API_URL } from './api'
+import { useState, useEffect, useCallback } from 'react'
+import { API_URL } from './api'
 
 export default function AdmissionsAdmin({ onBack }) {
   const [applications, setApplications] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    fetchApplications()
-  }, [])
-
-  async function fetchApplications() {
+  const fetchApplications = useCallback(async () => {
     try {
       const response = await fetch(`${API_URL}/admissions/admin/applications/`, {
         headers: {
@@ -25,7 +21,11 @@ export default function AdmissionsAdmin({ onBack }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    fetchApplications()
+  }, [fetchApplications])
 
   async function provision(id) {
     if (!window.confirm("Are you sure you want to provision accounts for this application?")) return;

@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    },
+    {
+      "src": "config/wsgi.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "config/wsgi.py"
+    },
+    {
+      "src": "/admin/(.*)",
+      "dest": "config/wsgi.py"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "config/wsgi.py"
+    },
+    {
+      "src": "/media/(.*)",
+      "dest": "config/wsgi.py"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/frontend/assets/$1"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/frontend/favicon.ico"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/index.html"
+    }
+  ]
+}
+

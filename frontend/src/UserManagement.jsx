@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { api, API_URL } from './api'
 
 export default function UserManagement({ roleFilter, onBack }) {
@@ -10,11 +10,7 @@ export default function UserManagement({ roleFilter, onBack }) {
 
   const roleValue = roleFilter === 'Staff' ? 'admin' : roleFilter.toLowerCase().replace(/s$/, '')
 
-  useEffect(() => {
-    fetchProfiles()
-  }, [roleFilter])
-
-  async function fetchProfiles() {
+  const fetchProfiles = useCallback(async () => {
     try {
       const response = await fetch(`${API_URL}/accounts/profiles/?role=${roleValue}`, {
         headers: {
@@ -29,7 +25,11 @@ export default function UserManagement({ roleFilter, onBack }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [roleValue])
+
+  useEffect(() => {
+    fetchProfiles()
+  }, [fetchProfiles])
 
   async function handleProvision(e) {
     e.preventDefault()

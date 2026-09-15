@@ -212,8 +212,7 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "").strip()
 _email_tls_str = os.environ.get("EMAIL_USE_TLS", "").strip().lower()
 EMAIL_USE_TLS = False if _email_tls_str in ("false", "0", "no") else True
 DEFAULT_FROM_EMAIL = (
-    os.environ.get("DEFAULT_FROM_EMAIL", "").strip()
-    or "no-reply@school.example.com"
+    os.environ.get("DEFAULT_FROM_EMAIL", "").strip() or "no-reply@school.example.com"
 )
 
 # --- File upload limits (assignments: max 10MB) ---

@@ -1465,7 +1465,7 @@ function AIChatbotWidget() {
     try {
       const data = await api.aiChatbot(userMessage.text)
       setMessages((prev) => [...prev, { sender: 'ai', text: data.response }])
-    } catch (err) {
+    } catch {
       setMessages((prev) => [...prev, { sender: 'ai', text: 'Error connecting to the assistant.' }])
     } finally {
       setLoading(false)
