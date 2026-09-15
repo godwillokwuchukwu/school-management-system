@@ -1,0 +1,10 @@
+[run]
+omit =
+    */migrations/*
+    manage.py
+    smoke_test.py
+    generate_docs.py
+    */management/commands/*
+    config/asgi.py
+    config/wsgi.py
+    */tests.py

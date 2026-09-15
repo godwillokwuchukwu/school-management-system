@@ -1,0 +1,317 @@
+/* Riverside Academy public site theme -- matches the ORIGINAL palette/name
+   used by the pre-existing single-page PublicSite component (App.css /
+   index.css `.public-*` classes), extended to a full multi-page site.
+   Do not change these values without checking against that original. */
+.bfa-public {
+  --bfa-navy: #173a2b;      /* original --navy */
+  --bfa-navy-dark: #102c21; /* original footer bg */
+  --bfa-navy-2: #285943;    /* original --navy-2 */
+  --bfa-gold: #b38848;      /* original accent */
+  --bfa-gold-light: #d7b979;
+  --bfa-bg: #f7f5ef;        /* original --canvas */
+  --bfa-white: #ffffff;
+  --bfa-text: #20352d;      /* original --ink */
+  --bfa-muted: #738076;
+  --bfa-border: #dfe4da;    /* original --line */
+  --bfa-radius: 4px;
+
+  font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+  color: var(--bfa-text);
+  background: var(--bfa-bg);
+  min-height: 100vh;
+}
+
+.bfa-public a:not(.bfa-btn) { color: inherit; text-decoration: none; }
+.bfa-public a.bfa-btn { text-decoration: none; }
+.bfa-public button { font-family: inherit; cursor: pointer; }
+.bfa-public img { max-width: 100%; display: block; }
+.bfa-public .bfa-container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+.bfa-public h1, .bfa-public h2 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; }
+
+/* --- Utility bar + header --- */
+.bfa-utility {
+  background: var(--bfa-navy);
+  color: #d8dfc8;
+  font-size: 11px;
+  letter-spacing: 0.2px;
+}
+.bfa-utility .bfa-container { display: flex; justify-content: space-between; padding: 10px 24px; flex-wrap: wrap; gap: 6px; }
+
+.bfa-header {
+  background: var(--bfa-bg);
+  color: var(--bfa-text);
+  border-bottom: 1px solid var(--bfa-border);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.bfa-header .bfa-container { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; gap: 16px; }
+.bfa-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; }
+.bfa-brand-mark {
+  width: 36px; height: 36px; border-radius: var(--bfa-radius); background: var(--bfa-navy);
+  color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-family: Georgia, serif;
+}
+.bfa-nav { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+.bfa-nav a { font-size: 11px; font-weight: 500; color: #456254; padding: 6px 0; border-bottom: 2px solid transparent; transition: 0.2s; }
+.bfa-nav a:hover, .bfa-nav a.active { color: var(--bfa-gold); border-color: var(--bfa-gold); }
+.bfa-header-actions { display: flex; align-items: center; gap: 10px; }
+.bfa-btn {
+  display: inline-flex; align-items: center; gap: 8px; border-radius: var(--bfa-radius); padding: 11px 17px;
+  font-weight: 700; font-size: 11px; border: none; transition: 0.2s ease;
+}
+.bfa-btn-gold { background: var(--bfa-gold); color: #fff; }
+.bfa-btn-gold:hover { background: #a3793d; transform: translateY(-2px); }
+.bfa-btn-outline { background: transparent; border: 1.5px solid var(--bfa-border); color: var(--bfa-navy); }
+.bfa-btn-outline:hover { background: var(--bfa-navy-2); border-color: var(--bfa-navy-2); color: #fff; transform: translateY(-2px); }
+.bfa-btn-navy { background: var(--bfa-navy-2); color: #fff; }
+.bfa-btn-navy:hover { background: var(--bfa-navy); }
+.bfa-btn-block { width: 100%; justify-content: center; }
+.bfa-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.bfa-mobile-toggle { display: none; background: none; border: none; color: var(--bfa-navy); font-size: 24px; }
+
+/* --- Hero (matches original .public-hero campus-photo treatment) --- */
+.bfa-hero {
+  min-height: 480px;
+  padding: 90px 6vw 70px;
+  background: linear-gradient(90deg, #102f24e8 0%, #183d2ca8 45%, #183d2c35), url('/school-campus.jpg') center/cover, #28533d;
+  color: #fff;
+}
+.bfa-hero .bfa-container { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: flex-end; max-width: 1180px; }
+.bfa-eyebrow { color: var(--bfa-gold-light); font-weight: 700; letter-spacing: 1.2px; font-size: 11px; text-transform: uppercase; margin-bottom: 16px; }
+.bfa-hero h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1; margin: 0 0 20px; letter-spacing: -1px; }
+.bfa-hero p { font-size: 15px; color: #e1e7d9; max-width: 460px; margin: 0 0 28px; line-height: 1.7; }
+.bfa-hero-actions { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+.bfa-hero-card {
+  padding: 20px; border-left: 1px solid var(--bfa-gold-light); color: #f2dfb5; font-size: 11px;
+}
+.bfa-hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 8px; }
+.bfa-hero-stats div strong { display: block; font: 23px/1.1 Georgia, serif; color: #fff; margin-top: 6px; }
+.bfa-hero-stats div span { font-size: 11px; color: #f2dfb5; }
+
+/* --- Sections --- */
+.bfa-section { padding: 70px 0; }
+.bfa-section-alt { background: var(--bfa-white); }
+.bfa-section-head { max-width: 640px; margin: 0 auto 44px; text-align: center; }
+.bfa-section-head h2 { font-size: clamp(30px, 4vw, 46px); margin: 6px 0 12px; color: #1d3b2d; }
+.bfa-section-head p { color: var(--bfa-muted); font-size: 14px; line-height: 1.7; }
+.bfa-section-head.left { margin: 0 0 36px; text-align: left; }
+
+.bfa-grid { display: grid; gap: 24px; }
+.bfa-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.bfa-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.bfa-grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+.bfa-card {
+  background: var(--bfa-white); border: 1px solid var(--bfa-border); border-radius: var(--bfa-radius);
+  padding: 24px; transition: 0.2s ease;
+}
+.bfa-card:hover { box-shadow: 0 13px 35px rgba(28, 52, 37, 0.1); transform: translateY(-3px); }
+.bfa-card-icon {
+  width: 20px; color: var(--bfa-gold); font-size: 20px; margin-bottom: 10px;
+}
+.bfa-card h3 { margin: 0 0 8px; font-size: 15px; color: #244335; font-family: Georgia, serif; }
+.bfa-card p { margin: 0; color: var(--bfa-muted); font-size: 13px; line-height: 1.6; }
+.bfa-tag {
+  display: inline-block; color: var(--bfa-gold); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 10px;
+}
+
+.bfa-badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: #e8eadf; color: #244335; display: inline-block; }
+.bfa-badge-gold { background: #f3e7d1; color: #8a6113; }
+
+/* --- Stats band --- */
+.bfa-stats-band { background: var(--bfa-navy); color: #fff; padding: 44px 0; }
+.bfa-stats-band .bfa-grid-4 { text-align: center; }
+.bfa-stats-band strong { display: block; font: 30px/1 Georgia, serif; color: var(--bfa-gold-light); }
+.bfa-stats-band span { font-size: 11px; color: #c8d2c1; }
+
+/* --- Testimonials --- */
+.bfa-quote { font: 15px/1.7 Georgia, serif; font-style: italic; color: var(--bfa-text); margin: 0 0 16px; }
+.bfa-quote-author { font-weight: 700; color: #244335; font-size: 13px; }
+.bfa-quote-role { color: var(--bfa-muted); font-size: 11px; text-transform: capitalize; }
+
+/* --- Admissions banner --- */
+.bfa-cta-banner {
+  background: var(--bfa-navy); color: #fff; padding: 52px; text-align: center;
+}
+.bfa-cta-banner h2 { font-size: 28px; margin: 8px 0 12px; color: #fff; }
+.bfa-cta-banner p { color: #c8d2c1; margin: 0 0 26px; }
+
+/* --- Forms --- */
+.bfa-form { display: flex; flex-direction: column; gap: 18px; max-width: 640px; }
+.bfa-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.bfa-field { display: flex; flex-direction: column; gap: 6px; font-size: 12px; font-weight: 700; color: #244335; }
+.bfa-field input, .bfa-field select, .bfa-field textarea {
+  font-family: 'Trebuchet MS', 'Segoe UI', sans-serif; padding: 11px 14px; border: 1.5px solid var(--bfa-border);
+  border-radius: var(--bfa-radius); font-size: 13px; font-weight: 400; color: var(--bfa-text); background: var(--bfa-white);
+}
+.bfa-field input:focus, .bfa-field select:focus, .bfa-field textarea:focus { outline: none; border-color: var(--bfa-gold); }
+.bfa-field textarea { min-height: 110px; resize: vertical; }
+.bfa-form-section-title { font: 14px Georgia, serif; font-weight: 700; color: #244335; margin: 6px 0 -6px; padding-top: 14px; border-top: 1px solid var(--bfa-border); }
+.bfa-error { background: #fdecec; color: #a3231b; border: 1px solid #f4c6c2; border-radius: var(--bfa-radius); padding: 12px 16px; font-size: 13px; }
+.bfa-success { background: #eaf3e6; color: #1d3b2d; border: 1px solid #cfe0c8; border-radius: var(--bfa-radius); padding: 14px 16px; font-size: 13px; }
+
+/* --- Timeline --- */
+.bfa-timeline { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
+.bfa-timeline li { display: flex; gap: 14px; padding-bottom: 22px; position: relative; }
+.bfa-timeline li::before { content: ''; position: absolute; left: 8px; top: 22px; bottom: 0; width: 2px; background: var(--bfa-border); }
+.bfa-timeline li:last-child::before { display: none; }
+.bfa-timeline-dot { width: 18px; height: 18px; border-radius: 50%; background: var(--bfa-border); flex-shrink: 0; margin-top: 2px; }
+.bfa-timeline li.done .bfa-timeline-dot { background: var(--bfa-navy-2); }
+.bfa-timeline li.current .bfa-timeline-dot { background: var(--bfa-gold); }
+.bfa-timeline strong { display: block; color: #244335; font-size: 13px; }
+
+/* --- Job / doc lists --- */
+.bfa-list-row {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 18px 22px; border: 1px solid var(--bfa-border); border-radius: var(--bfa-radius); background: var(--bfa-white); margin-bottom: 12px;
+}
+.bfa-list-row h4 { margin: 0 0 4px; color: #244335; font: 14px Georgia, serif; }
+.bfa-list-row p { margin: 0; color: var(--bfa-muted); font-size: 12px; }
+
+/* --- Footer --- */
+.bfa-footer { background: var(--bfa-navy-dark); color: #a9b8a8; padding: 55px 0 28px; }
+.bfa-footer .bfa-grid-4 { margin-bottom: 40px; }
+.bfa-footer h5 { color: #e7d3a2; font-size: 13px; margin: 0 0 12px; }
+.bfa-footer a:not(.bfa-social-btn), .bfa-footer p { display: block; font-size: 11px; margin-bottom: 7px; color: #a9b8a8; }
+.bfa-footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.12); padding-top: 20px; font-size: 11px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+/* --- Simple page header (About/Academics/etc.) --- */
+.bfa-page-hero { background: var(--bfa-navy); color: #fff; padding: 54px 0; }
+.bfa-page-hero h1 { font-size: 32px; margin: 4px 0 8px; color: #fff; }
+.bfa-page-hero p { color: #c8d2c1; max-width: 560px; }
+.bfa-breadcrumb { font-size: 12px; color: var(--bfa-gold-light); margin-bottom: 8px; }
+
+.bfa-empty { text-align: center; padding: 40px 20px; color: var(--bfa-muted); }
+.bfa-loading { text-align: center; padding: 40px 20px; color: var(--bfa-muted); }
+
+.bfa-status-pill { display: inline-block; padding: 5px 14px; border-radius: 12px; font-size: 11px; font-weight: 700; background: #e8eadf; color: #244335; text-transform: capitalize; }
+
+@media (max-width: 900px) {
+  .bfa-grid-4, .bfa-grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .bfa-hero .bfa-container { grid-template-columns: 1fr; }
+  .bfa-form-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .bfa-nav { display: none; }
+  .bfa-mobile-toggle { display: block; }
+  .bfa-grid-4, .bfa-grid-3, .bfa-grid-2 { grid-template-columns: 1fr; }
+  .bfa-hero h1 { font-size: 32px; }
+  .bfa-nav.open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--bfa-bg); border-bottom: 1px solid var(--bfa-border); padding: 16px 24px; gap: 12px; }
+}
+
+/* --- Social Media Links --- */
+.bfa-social-links { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+.bfa-social-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; min-width: 36px; min-height: 36px;
+  border-radius: 50%; background: rgba(255, 255, 255, 0.12); color: #d7b979;
+  transition: all 0.2s ease; text-decoration: none; line-height: 1;
+  padding: 0; box-sizing: border-box;
+}
+.bfa-social-btn:hover { background: var(--bfa-gold); color: #fff; transform: translateY(-2px); }
+.bfa-social-btn svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; display: block; }
+
+/* --- Card Images & Media --- */
+.bfa-card-media {
+  width: 100%; height: 180px; object-fit: cover; border-radius: calc(var(--bfa-radius) - 1px) calc(var(--bfa-radius) - 1px) 0 0;
+  margin: -24px -24px 16px -24px; width: calc(100% + 48px); background: #e5ebe4;
+}
+.bfa-card-placeholder {
+  width: calc(100% + 48px); height: 160px; margin: -24px -24px 16px -24px;
+  background: linear-gradient(135deg, #1f4333 0%, #2f614b 100%); display: flex;
+  align-items: center; justify-content: center; color: rgba(255, 255, 255, 0.4);
+  font-size: 28px;
+}
+.bfa-article-hero-img {
+  width: 100%; max-height: 380px; object-fit: cover; border-radius: var(--bfa-radius);
+  margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+/* --- Homepage About Teaser --- */
+.bfa-teaser-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+}
+.bfa-teaser-img-wrap {
+  position: relative; border-radius: var(--bfa-radius); overflow: hidden;
+  box-shadow: 0 16px 40px rgba(16, 44, 33, 0.14);
+}
+.bfa-teaser-img {
+  width: 100%; height: 380px; object-fit: cover; display: block;
+}
+.bfa-teaser-badge-overlay {
+  position: absolute; bottom: 20px; right: 20px; background: rgba(23, 58, 43, 0.92);
+  backdrop-filter: blur(4px); color: #fff; padding: 12px 18px; border-radius: var(--bfa-radius);
+  border-left: 3px solid var(--bfa-gold); font-size: 12px;
+}
+.bfa-teaser-badge-overlay strong { display: block; font: 18px Georgia, serif; color: var(--bfa-gold-light); }
+.bfa-teaser-highlights {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 24px 0 30px;
+}
+.bfa-teaser-item {
+  background: var(--bfa-white); border: 1px solid var(--bfa-border); padding: 12px 16px;
+  border-radius: var(--bfa-radius); font-size: 13px; font-weight: 600; color: var(--bfa-navy);
+  display: flex; align-items: center; gap: 10px;
+}
+.bfa-teaser-item span { color: var(--bfa-gold); font-size: 16px; }
+
+/* --- Testimonial Avatar --- */
+.bfa-testimonial-author-row {
+  display: flex; align-items: center; gap: 14px; margin-top: 18px;
+}
+.bfa-testimonial-avatar {
+  width: 44px; height: 44px; border-radius: 50%; object-fit: cover;
+  border: 2px solid var(--bfa-gold-light); flex-shrink: 0; background: #dfe4da;
+}
+.bfa-testimonial-avatar-fallback {
+  width: 44px; height: 44px; border-radius: 50%; background: var(--bfa-navy);
+  color: #fff; font-weight: bold; font-family: Georgia, serif; display: flex;
+  align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+}
+
+/* --- Embedded Map --- */
+.bfa-map-frame {
+  margin-top: 40px; border-radius: var(--bfa-radius); overflow: hidden;
+  border: 1px solid var(--bfa-border); background: #eee; box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+}
+.bfa-map-embed { width: 100%; height: 380px; border: 0; display: block; }
+
+/* --- Academics Curriculum Tabs --- */
+.bfa-curriculum-tabs {
+  display: flex; gap: 12px; border-bottom: 2px solid var(--bfa-border);
+  margin-bottom: 32px; overflow-x: auto; padding-bottom: 4px;
+}
+.bfa-tab-btn {
+  background: transparent; border: none; padding: 12px 20px; font-size: 14px;
+  font-weight: 700; color: var(--bfa-muted); cursor: pointer; border-bottom: 3px solid transparent;
+  margin-bottom: -6px; transition: all 0.2s; white-space: nowrap;
+}
+.bfa-tab-btn:hover { color: var(--bfa-navy); }
+.bfa-tab-btn.active { color: var(--bfa-navy); border-bottom-color: var(--bfa-gold); }
+.bfa-subject-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px;
+}
+.bfa-subject-card {
+  background: var(--bfa-white); border: 1px solid var(--bfa-border); border-radius: var(--bfa-radius);
+  padding: 20px; transition: 0.2s;
+}
+.bfa-subject-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.05); }
+.bfa-subject-card h4 { margin: 0 0 6px; font: 15px Georgia, serif; color: var(--bfa-navy); }
+.bfa-subject-card p { margin: 0; font-size: 12.5px; color: var(--bfa-muted); line-height: 1.5; }
+
+/* --- Unified News & Events Hub --- */
+.bfa-hub-filter-bar {
+  display: flex; gap: 10px; margin-bottom: 32px; flex-wrap: wrap; align-items: center;
+}
+.bfa-date-badge {
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--bfa-navy); color: #fff; border-radius: var(--bfa-radius); padding: 8px 12px;
+  min-width: 54px; text-align: center; flex-shrink: 0;
+}
+.bfa-date-badge-month { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--bfa-gold-light); }
+.bfa-date-badge-day { font: 20px/1 Georgia, serif; font-weight: 700; }
+
+@media (max-width: 900px) {
+  .bfa-teaser-grid { grid-template-columns: 1fr; }
+}
+
