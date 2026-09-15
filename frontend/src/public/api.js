@@ -60,6 +60,9 @@ async function request(path, options = {}, canRefresh = true) {
 
   const payload = response.status === 204 ? null : await response.json().catch(() => null)
   if (!response.ok) {
+    if (response.status === 401) {
+      clearTokens()
+    }
     const detail = payload?.detail || Object.values(payload || {})?.flat?.()?.[0] || `Request failed (${response.status})`
     throw new ApiError(String(detail), response.status, payload)
   }

@@ -273,7 +273,16 @@ export default function AdmissionsApply() {
   useEffect(() => { document.title = 'Apply — Riverside Academy' }, [])
 
   const loadApplications = () => {
-    publicApi.myApplications().then((data) => setApplications(data.results || data || [])).catch((err) => setError(err.message))
+    publicApi
+      .myApplications()
+      .then((data) => setApplications(data.results || data || []))
+      .catch((err) => {
+        if (err.status === 401 || !publicApi.isAuthenticated()) {
+          setSignedIn(false)
+        } else {
+          setError(err.message)
+        }
+      })
   }
 
   useEffect(() => { if (signedIn) loadApplications() }, [signedIn])
@@ -310,13 +319,24 @@ export default function AdmissionsApply() {
       <section className="bfa-section">
         <div className="bfa-container" style={{ maxWidth: 760 }}>
           <ErrorBanner message={error} />
-          <button
-            className="bfa-btn bfa-btn-gold"
-            style={{ marginBottom: 24 }}
-            onClick={() => setSelected({ ...EMPTY_APPLICATION, status: 'started', documents: [] })}
-          >
-            + Start a new application
-          </button>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 10 }}>
+            <button
+              className="bfa-btn bfa-btn-gold"
+              onClick={() => setSelected({ ...EMPTY_APPLICATION, status: 'started', documents: [] })}
+            >
+              + Start a new application
+            </button>
+            <button
+              className="bfa-btn bfa-btn-outline"
+              style={{ color: 'var(--bfa-navy)', borderColor: 'var(--bfa-border)' }}
+              onClick={() => {
+                publicApi.logout()
+                setSignedIn(false)
+              }}
+            >
+              Sign out
+            </button>
+          </div>
           {applications === null ? (
             <Loading />
           ) : applications.length === 0 ? (
