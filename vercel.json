@@ -35,8 +35,28 @@
       "dest": "/frontend/assets/$1"
     },
     {
+      "src": "/school-campus.jpg",
+      "dest": "/frontend/school-campus.jpg"
+    },
+    {
+      "src": "/school-community.jpg",
+      "dest": "/frontend/school-community.jpg"
+    },
+    {
+      "src": "/favicon.svg",
+      "dest": "/frontend/favicon.svg"
+    },
+    {
+      "src": "/icons.svg",
+      "dest": "/frontend/icons.svg"
+    },
+    {
       "src": "/favicon.ico",
       "dest": "/frontend/favicon.ico"
+    },
+    {
+      "src": "/(.*\\.(?:ico|png|jpg|jpeg|svg|css|js|gif|webp|woff|woff2|ttf|eot|json|txt))",
+      "dest": "/frontend/$1"
     },
     {
       "src": "/(.*)",
@@ -44,4 +64,3 @@
     }
   ]
 }
-
