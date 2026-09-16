@@ -1,7 +1,12 @@
 import pytest
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
-from communications.models import Announcement, Conversation, ConversationParticipant, Message
+from communications.models import (
+    Announcement,
+    Conversation,
+    ConversationParticipant,
+    Message,
+)
 
 User = get_user_model()
 
@@ -9,7 +14,9 @@ User = get_user_model()
 @pytest.fixture
 def teacher_client():
     client = APIClient()
-    teacher = User.objects.create_user("teacher_comm@example.com", "teacher_comm@example.com", "Pass12345!")
+    teacher = User.objects.create_user(
+        "teacher_comm@example.com", "teacher_comm@example.com", "Pass12345!"
+    )
     teacher.profile.role = "teacher"
     teacher.profile.save()
     client.force_authenticate(user=teacher)
@@ -19,7 +26,9 @@ def teacher_client():
 @pytest.fixture
 def student_client():
     client = APIClient()
-    student = User.objects.create_user("student_comm@example.com", "student_comm@example.com", "Pass12345!")
+    student = User.objects.create_user(
+        "student_comm@example.com", "student_comm@example.com", "Pass12345!"
+    )
     student.profile.role = "student"
     student.profile.save()
     client.force_authenticate(user=student)
@@ -37,7 +46,7 @@ def test_announcements_and_conversations(teacher_client, student_client):
         {
             "title": "Welcome Back Assembly",
             "content": "All students report to the auditorium.",
-            "category": "general",
+            "category": "school-wide",
             "target_all": True,
             "created_by": teacher.id,
         },
@@ -68,6 +77,6 @@ def test_announcements_and_conversations(teacher_client, student_client):
 @pytest.mark.django_db
 def test_send_email_notification_task():
     from communications.tasks import send_email_notification
+
     res = send_email_notification("Test Subject", "Test Body", ["test@example.com"])
     assert res is True
-

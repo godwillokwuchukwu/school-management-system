@@ -189,11 +189,19 @@ class StudentPortalAuthTests(APITestCase):
 
     def test_student_login_form(self):
         from accounts.forms import StudentLoginForm
-        form = StudentLoginForm(data={"login_identifier": "student@example.com", "password": "Pass12345!", "remember_me": True})
+
+        form = StudentLoginForm(
+            data={
+                "login_identifier": "student@example.com",
+                "password": "Pass12345!",
+                "remember_me": True,
+            }
+        )
         self.assertTrue(form.is_valid())
 
     def test_student_registration_form_validation(self):
         from accounts.forms import StudentRegistrationForm
+
         valid_data = {
             "first_name": "Form",
             "last_name": "Student",
@@ -224,7 +232,9 @@ class StudentPortalAuthTests(APITestCase):
         self.assertIn("password", weak_form.errors)
 
         # Test duplicate email
-        User.objects.create_user(username="dup@example.com", email="dup@example.com", password="Pass12345!")
+        User.objects.create_user(
+            username="dup@example.com", email="dup@example.com", password="Pass12345!"
+        )
         dup_data = valid_data.copy()
         dup_data["email"] = "dup@example.com"
         dup_form = StudentRegistrationForm(data=dup_data)

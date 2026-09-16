@@ -2,7 +2,10 @@ import pytest
 from warehouse.models import DimStudent
 from warehouse.tasks import run_etl_pipeline
 from django.contrib.auth.models import User as CustomUser
-from warehouse.analytics import get_low_attendance_students, get_outstanding_fees_by_class
+from warehouse.analytics import (
+    get_low_attendance_students,
+    get_outstanding_fees_by_class,
+)
 
 pytestmark = pytest.mark.django_db
 

@@ -11,7 +11,9 @@ User = get_user_model()
 @pytest.fixture
 def admin_client():
     client = APIClient()
-    admin = User.objects.create_superuser("admin_fees@example.com", "admin_fees@example.com", "Pass12345!")
+    admin = User.objects.create_superuser(
+        "admin_fees@example.com", "admin_fees@example.com", "Pass12345!"
+    )
     admin.profile.role = "admin"
     admin.profile.save()
     client.force_authenticate(user=admin)
@@ -21,10 +23,14 @@ def admin_client():
 @pytest.fixture
 def student_client():
     client = APIClient()
-    student_user = User.objects.create_user("student_fees@example.com", "student_fees@example.com", "Pass12345!")
+    student_user = User.objects.create_user(
+        "student_fees@example.com", "student_fees@example.com", "Pass12345!"
+    )
     student_user.profile.role = "student"
     student_user.profile.save()
-    student = Student.objects.create(profile=student_user.profile, admission_number="ADM-FEES-01", dob="2012-01-01")
+    student = Student.objects.create(
+        profile=student_user.profile, admission_number="ADM-FEES-01", dob="2012-01-01"
+    )
     client.force_authenticate(user=student_user)
     return client, student_user, student
 
@@ -58,8 +64,12 @@ def test_bulk_generate_and_webhook(admin_client, student_client):
     client, admin = admin_client
     s_client, student_user, student = student_client
 
-    school_class = Class.objects.create(name="Class 5", code="CLS5", academic_year="2026/2027")
-    Enrollment.objects.create(student=student, school_class=school_class, academic_year="2026/2027")
+    school_class = Class.objects.create(
+        name="Class 5", code="CLS5", academic_year="2026/2027"
+    )
+    Enrollment.objects.create(
+        student=student, school_class=school_class, academic_year="2026/2027"
+    )
 
     schedule = FeeSchedule.objects.create(
         title="Term 1 Sports Fee",
@@ -105,4 +115,3 @@ def test_bulk_generate_and_webhook(admin_client, student_client):
         format="json",
     )
     assert dup_resp.status_code == 400
-
