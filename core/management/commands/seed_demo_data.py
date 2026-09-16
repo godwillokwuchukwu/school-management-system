@@ -44,23 +44,30 @@ class Command(BaseCommand):
             self.stdout.write("Created student@demo.com")
 
             # Create a basic class and subject
-            cls = Class.objects.create(
-                name="Grade 10A", code="10A", academic_year="2025-2026"
+            cls, _ = Class.objects.get_or_create(
+                code="10A",
+                academic_year="2025-2026",
+                defaults={"name": "Grade 10A"},
             )
-            sub = Subject.objects.create(name="Mathematics", code="MATH101")
+            sub, _ = Subject.objects.get_or_create(
+                code="MATH101",
+                defaults={"name": "Mathematics"},
+            )
 
             # Attach student profile
             from datetime import date
 
-            Student.objects.create(
-                profile=u.profile, dob=date(2010, 1, 1), admission_number="ADM001"
+            student, _ = Student.objects.get_or_create(
+                admission_number="ADM001",
+                defaults={"profile": u.profile, "dob": date(2010, 1, 1)},
             )
             # Create enrollment
             from academics.models import Enrollment
 
-            student = Student.objects.get(admission_number="ADM001")
-            Enrollment.objects.create(
-                student=student, school_class=cls, academic_year="2025-2026"
+            Enrollment.objects.get_or_create(
+                student=student,
+                school_class=cls,
+                academic_year="2025-2026",
             )
             self.stdout.write("Created demo student profile and class")
 
