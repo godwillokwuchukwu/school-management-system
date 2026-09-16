@@ -5,6 +5,7 @@ and portal authentication views, serializers, and forms in one single module.
 """
 
 from accounts.auth.views import (
+from accounts.views import (
     LoginView,
     StudentRegisterView,
     VerifyEmailView,
@@ -18,6 +19,9 @@ from accounts.auth.views import (
 )
 
 from accounts.auth.serializers import (
+ActivateAccountView = AccountActivateView
+
+from accounts.serializers import (
     RoleAwareTokenObtainPairSerializer,
     StudentRegisterSerializer,
     PublicApplicantRegisterSerializer,
@@ -28,6 +32,7 @@ from accounts.auth.serializers import (
 )
 
 from accounts.auth.forms import (
+from accounts.forms import (
     StudentLoginForm,
     StudentRegistrationForm,
 )

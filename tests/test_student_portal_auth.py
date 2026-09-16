@@ -186,3 +186,47 @@ class StudentPortalAuthTests(APITestCase):
         self.assertTrue(
             AuditLog.objects.filter(action="admission.move_to_payment").exists()
         )
+
+    def test_student_login_form(self):
+        from accounts.forms import StudentLoginForm
+        form = StudentLoginForm(data={"login_identifier": "student@example.com", "password": "Pass12345!", "remember_me": True})
+        self.assertTrue(form.is_valid())
+
+    def test_student_registration_form_validation(self):
+        from accounts.forms import StudentRegistrationForm
+        valid_data = {
+            "first_name": "Form",
+            "last_name": "Student",
+            "email": "form.student@example.com",
+            "phone": "+2348011223344",
+            "dob": "2008-05-15",
+            "password": "ValidPassword123!",
+            "confirm_password": "ValidPassword123!",
+            "student_id": "STU-FORM-01",
+            "agree_terms": True,
+        }
+        form = StudentRegistrationForm(data=valid_data)
+        self.assertTrue(form.is_valid())
+
+        # Test password mismatch
+        mismatch_data = valid_data.copy()
+        mismatch_data["confirm_password"] = "DifferentPassword123!"
+        mismatch_form = StudentRegistrationForm(data=mismatch_data)
+        self.assertFalse(mismatch_form.is_valid())
+        self.assertIn("confirm_password", mismatch_form.errors)
+
+        # Test weak password
+        weak_data = valid_data.copy()
+        weak_data["password"] = "short"
+        weak_data["confirm_password"] = "short"
+        weak_form = StudentRegistrationForm(data=weak_data)
+        self.assertFalse(weak_form.is_valid())
+        self.assertIn("password", weak_form.errors)
+
+        # Test duplicate email
+        User.objects.create_user(username="dup@example.com", email="dup@example.com", password="Pass12345!")
+        dup_data = valid_data.copy()
+        dup_data["email"] = "dup@example.com"
+        dup_form = StudentRegistrationForm(data=dup_data)
+        self.assertFalse(dup_form.is_valid())
+        self.assertIn("email", dup_form.errors)
