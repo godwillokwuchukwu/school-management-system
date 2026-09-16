@@ -1,10 +1,4 @@
-const API_URL =
-  import.meta.env.VITE_API_URL ||
-  (typeof window !== 'undefined' &&
-  window.location.hostname !== 'localhost' &&
-  window.location.hostname !== '127.0.0.1'
-    ? '/api'
-    : 'http://localhost:8000/api')
+const API_URL = import.meta.env.VITE_API_URL || '/api'
 const ACCESS_TOKEN_KEY = 'access_token'
 const REFRESH_TOKEN_KEY = 'refresh_token'
 
@@ -64,8 +58,27 @@ async function request(path, options = {}, canRefresh = true) {
   const payload = response.status === 204 ? null : await response.json().catch(() => null)
   if (!response.ok) {
     if (response.status === 401) clearTokens()
-    const detail = payload?.detail || Object.values(payload || {})?.flat?.()?.[0] || `Request failed (${response.status})`
-    throw new ApiError(String(detail), response.status, payload)
+    let detail = ''
+    if (payload) {
+      if (payload.detail) {
+        detail = String(payload.detail)
+      } else if (payload.non_field_errors) {
+        detail = [].concat(payload.non_field_errors).join(' ')
+      } else if (payload.message) {
+        detail = String(payload.message)
+      } else {
+        const fieldErrors = Object.entries(payload)
+          .map(([key, val]) => {
+            const msgs = [].concat(val).map(String).join(', ')
+            return `${key}: ${msgs}`
+          })
+          .join('; ')
+        detail = fieldErrors || `Request failed (${response.status})`
+      }
+    } else {
+      detail = `Request failed (${response.status})`
+    }
+    throw new ApiError(detail, response.status, payload)
   }
   return payload
 }

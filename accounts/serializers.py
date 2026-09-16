@@ -253,7 +253,7 @@ class RoleAwareTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         username = attrs.get(self.username_field)
         if username:
-            # Check if this identifier is a Student admission number or Profile student_id
+            # 1. Check if identifier is a Student admission number
             student = (
                 Student.objects.filter(admission_number__iexact=username)
                 .select_related("profile__user")
@@ -262,6 +262,7 @@ class RoleAwareTokenObtainPairSerializer(TokenObtainPairSerializer):
             if student and student.profile and student.profile.user:
                 attrs[self.username_field] = student.profile.user.username
             else:
+                # 2. Check if identifier is a Profile student_id
                 profile = (
                     Profile.objects.filter(student_id__iexact=username)
                     .select_related("user")
@@ -269,6 +270,13 @@ class RoleAwareTokenObtainPairSerializer(TokenObtainPairSerializer):
                 )
                 if profile and profile.user:
                     attrs[self.username_field] = profile.user.username
+                else:
+                    # 3. Check if identifier is an email address
+                    user_by_email = User.objects.filter(
+                        email__iexact=username
+                    ).first()
+                    if user_by_email:
+                        attrs[self.username_field] = user_by_email.username
         data = super().validate(attrs)
         data["role"] = getattr(getattr(self.user, "profile", None), "role", None)
         data["email"] = self.user.email
@@ -293,7 +301,7 @@ class StudentRegisterSerializer(serializers.Serializer):
     first_name = serializers.CharField(max_length=100)
     last_name = serializers.CharField(max_length=100)
     email = serializers.EmailField()
-    phone = serializers.CharField(max_length=30)
+    phone = serializers.CharField(max_length=20)
     dob = serializers.DateField()
     password = serializers.CharField(write_only=True, validators=[validate_password])
     confirm_password = serializers.CharField(write_only=True)
@@ -307,6 +315,21 @@ class StudentRegisterSerializer(serializers.Serializer):
                 "An account with this email address already exists."
             )
         return val
+
+    def validate_student_id(self, value):
+        if value and value.strip():
+            val = value.strip()
+            from accounts.models import Profile
+
+            if Profile.objects.filter(student_id=val).exists():
+                raise serializers.ValidationError(
+                    "This student ID is already in use."
+                )
+            if Student.objects.filter(admission_number=val).exists():
+                raise serializers.ValidationError(
+                    "This student ID is already associated with another account."
+                )
+        return value
 
     def validate(self, attrs):
         if attrs.get("password") != attrs.get("confirm_password"):
