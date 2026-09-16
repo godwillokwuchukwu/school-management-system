@@ -123,7 +123,11 @@ class ApplicationDocumentListCreateView(generics.ListCreateAPIView):
         application = generics.get_object_or_404(
             AdmissionApplication.objects.all(), pk=self.kwargs["application_id"]
         )
-        if application.applicant_id != self.request.user.id:
+        is_admin = (
+            getattr(self.request.user, "profile", None)
+            and self.request.user.profile.role == "admin"
+        )
+        if not is_admin and application.applicant_id != self.request.user.id:
             raise PermissionDenied("This is not your application.")
         return application
 
@@ -133,16 +137,19 @@ class ApplicationDocumentListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         app = self._get_application()
         doc = serializer.save(application=app)
-        from services import notification_service
-        from accounts.models import AdminNotificationType
+        try:
+            from services import notification_service
+            from accounts.models import AdminNotificationType
 
-        notification_service.notify_admin(
-            title=f"Document Uploaded: {app.reference}",
-            message=f"Document ({doc.get_document_type_display()}) uploaded for {app.student_first_name} {app.student_last_name}.",
-            notification_type=AdminNotificationType.DOCUMENT_UPLOADED,
-            object_instance=app,
-            user=self.request.user,
-        )
+            notification_service.notify_admin(
+                title=f"Document Uploaded: {app.reference or app.id}",
+                message=f"Document ({doc.get_document_type_display()}) uploaded for {app.student_first_name} {app.student_last_name}.",
+                notification_type=AdminNotificationType.DOCUMENT_UPLOADED,
+                object_instance=app,
+                user=self.request.user,
+            )
+        except Exception:
+            pass
 
 
 class AdmissionApplicationPublicStatusView(generics.RetrieveAPIView):

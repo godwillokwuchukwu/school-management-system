@@ -35,14 +35,18 @@ class IsParent(BasePermission):
 
 class IsApplicant(BasePermission):
     """
-    The public applicant role (Stage 2). Deliberately has its own
-    permission class rather than reusing IsAuthenticated, so applicant
-    access to admissions endpoints is an explicit allow-list decision, not
-    an accident of "any logged-in user can reach this."
+    The applicant role (Stage 2). Also allows students, parents, and admins
+    to manage their own admission applications or review applications.
     """
 
     def has_permission(self, request, view):
-        return _has_role(request, Role.APPLICANT)
+        profile = getattr(request.user, "profile", None)
+        return bool(
+            request.user
+            and request.user.is_authenticated
+            and profile
+            and profile.role in (Role.APPLICANT, Role.STUDENT, Role.PARENT, Role.ADMIN)
+        )
 
 
 class IsAdminOrTeacher(BasePermission):

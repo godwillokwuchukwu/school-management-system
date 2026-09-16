@@ -18,17 +18,25 @@ export class ApiError extends Error {
 }
 
 function getAccessToken() {
-  return localStorage.getItem(ACCESS_TOKEN_KEY)
+  return localStorage.getItem(ACCESS_TOKEN_KEY) || localStorage.getItem('access_token')
 }
 
 function saveTokens(data) {
-  if (data.access) localStorage.setItem(ACCESS_TOKEN_KEY, data.access)
-  if (data.refresh) localStorage.setItem(REFRESH_TOKEN_KEY, data.refresh)
+  if (data.access) {
+    localStorage.setItem(ACCESS_TOKEN_KEY, data.access)
+    localStorage.setItem('access_token', data.access)
+  }
+  if (data.refresh) {
+    localStorage.setItem(REFRESH_TOKEN_KEY, data.refresh)
+    localStorage.setItem('refresh_token', data.refresh)
+  }
 }
 
 function clearTokens() {
   localStorage.removeItem(ACCESS_TOKEN_KEY)
   localStorage.removeItem(REFRESH_TOKEN_KEY)
+  localStorage.removeItem('access_token')
+  localStorage.removeItem('refresh_token')
 }
 
 async function refreshAccessToken() {

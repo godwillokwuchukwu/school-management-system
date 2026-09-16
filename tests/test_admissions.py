@@ -421,3 +421,50 @@ def test_job_application_status_is_publicly_trackable():
     assert status_response.status_code == 200
     assert status_response.data["status"] == "submitted"
     assert status_response.data["job_title"] == "PE Teacher"
+
+
+@pytest.mark.django_db
+def test_application_document_upload_and_list():
+    client = APIClient()
+    user = _register_applicant(client, "doc_applicant@example.com")
+
+    create = client.post(
+        "/api/admissions/applications/", VALID_APPLICATION_PAYLOAD, format="json"
+    )
+    assert create.status_code == 201
+    app_id = create.data["id"]
+
+    # Upload document
+    pdf_file = SimpleUploadedFile(
+        "birth_cert.pdf",
+        b"%PDF-1.4 test document content",
+        content_type="application/pdf",
+    )
+    upload_resp = client.post(
+        f"/api/admissions/applications/{app_id}/documents/",
+        {"document_type": "birth_certificate", "file": pdf_file},
+        format="multipart",
+    )
+    assert upload_resp.status_code == 201
+    assert upload_resp.data["document_type"] == "birth_certificate"
+    assert "file" in upload_resp.data
+
+    # List documents
+    list_resp = client.get(f"/api/admissions/applications/{app_id}/documents/")
+    assert list_resp.status_code == 200
+    assert len(list_resp.data) == 1
+    assert list_resp.data[0]["document_type"] == "birth_certificate"
+
+    # Admin can view documents
+    admin_user = User.objects.create_superuser(
+        "admin_doc@example.com", "admin_doc@example.com", "Pass12345!"
+    )
+    admin_user.profile.role = "admin"
+    admin_user.profile.save()
+    admin_client = APIClient()
+    admin_client.force_authenticate(user=admin_user)
+    admin_list_resp = admin_client.get(
+        f"/api/admissions/applications/{app_id}/documents/"
+    )
+    assert admin_list_resp.status_code == 200
+    assert len(admin_list_resp.data) == 1

@@ -139,10 +139,18 @@ USE_I18N = True
 USE_TZ = True
 
 # --- Static / media ---
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"
+
+if os.environ.get("VERCEL"):
+    import tempfile
+
+    MEDIA_ROOT = Path(tempfile.gettempdir()) / "media"
+else:
+    MEDIA_ROOT = BASE_DIR / "media"
+
+MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
