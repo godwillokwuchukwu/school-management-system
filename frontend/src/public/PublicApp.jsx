@@ -17,6 +17,7 @@ import NotFound from './pages/NotFound'
 import ParentRegister from './pages/ParentRegister'
 import Privacy from './pages/Privacy'
 import Programs from './pages/Programs'
+import StudentAuth from './pages/StudentAuth'
 import Terms from './pages/Terms'
 
 export default function PublicApp() {
@@ -30,6 +31,11 @@ export default function PublicApp() {
         <Route path="admissions" element={<Admissions />} />
         <Route path="admissions/apply" element={<AdmissionsApply />} />
         <Route path="admissions/status" element={<AdmissionsStatus />} />
+        <Route path="login" element={<StudentAuth />} />
+        <Route path="register" element={<StudentAuth />} />
+        <Route path="student/auth" element={<StudentAuth />} />
+        <Route path="student/login" element={<StudentAuth />} />
+        <Route path="student/register" element={<StudentAuth />} />
         <Route path="register/parent" element={<ParentRegister />} />
         <Route path="careers" element={<Careers />} />
         <Route path="news" element={<News />} />

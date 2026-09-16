@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Confirm your Riverside Academy email address</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #faf7f2; color: #1a2f26; margin: 0; padding: 40px 20px; }
+    .container { max-width: 580px; margin: 0 auto; background: #ffffff; border-radius: 12px; border: 1px solid #e7e2d9; overflow: hidden; box-shadow: 0 4px 20px rgba(19, 78, 63, 0.06); }
+    .header { background: #0e3d2f; color: #ffffff; padding: 32px; text-align: center; }
+    .header h1 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.5px; }
+    .header p { margin: 6px 0 0; color: #c5a059; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+    .content { padding: 36px 32px; font-size: 15px; line-height: 1.6; }
+    .btn-container { text-align: center; margin: 32px 0; }
+    .btn { display: inline-block; background-color: #c5a059; color: #0e3d2f; font-weight: 600; text-decoration: none; padding: 14px 32px; border-radius: 50px; font-size: 15px; box-shadow: 0 2px 8px rgba(197, 160, 89, 0.3); }
+    .footer { background: #f4f0e8; padding: 20px 32px; font-size: 12.5px; color: #6b7c74; border-top: 1px solid #e7e2d9; text-align: center; }
+    .url-fallback { word-break: break-all; color: #0e3d2f; font-size: 13px; background: #f9f8f5; padding: 12px; border-radius: 6px; border: 1px solid #e7e2d9; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Riverside Academy</h1>
+      <p>Student Portal Verification</p>
+    </div>
+    <div class="content">
+      <p>Hello <strong>{{ student_name }}</strong>,</p>
+      <p>Thank you for registering for the Riverside Academy Student Portal. Please confirm your email address by clicking the button below:</p>
+      
+      <div class="btn-container">
+        <a href="{{ verification_url }}" class="btn">Verify My Email</a>
+      </div>
+
+      <p>This verification link will expire in <strong>24 hours</strong>. If you did not create an account with Riverside Academy, please disregard this email.</p>
+      
+      <p style="margin-top: 24px; font-size: 13.5px; color: #555;">Button not working? Copy and paste this URL into your browser:</p>
+      <p class="url-fallback">{{ verification_url }}</p>
+    </div>
+    <div class="footer">
+      Riverside Academy · Plot 14, Admiralty Way, Lekki Phase 1, Lagos, Nigeria<br>
+      Need help? Contact support at <a href="mailto:support@riversideacademy.edu" style="color: #0e3d2f;">support@riversideacademy.edu</a>
+    </div>
+  </div>
+</body>
+</html>

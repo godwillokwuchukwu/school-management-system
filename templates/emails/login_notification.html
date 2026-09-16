@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>New login to your Riverside Academy account</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #faf7f2; color: #1a2f26; margin: 0; padding: 40px 20px; }
+    .container { max-width: 580px; margin: 0 auto; background: #ffffff; border-radius: 12px; border: 1px solid #e7e2d9; overflow: hidden; }
+    .header { background: #0e3d2f; color: #ffffff; padding: 28px 32px; }
+    .header h1 { margin: 0; font-size: 22px; }
+    .content { padding: 32px; font-size: 15px; line-height: 1.6; }
+    .meta-box { background: #f8f6f0; border-radius: 8px; border: 1px solid #e7e2d9; padding: 16px 20px; margin: 20px 0; font-size: 14px; }
+    .meta-box p { margin: 6px 0; }
+    .warning { background: #fff8eb; border-left: 4px solid #c5a059; padding: 14px 18px; margin-top: 24px; font-size: 13.5px; border-radius: 4px; }
+    .footer { background: #f4f0e8; padding: 18px 32px; font-size: 12px; color: #6b7c74; border-top: 1px solid #e7e2d9; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Riverside Academy</h1>
+      <p style="margin: 4px 0 0; color: #c5a059; font-size: 13px;">Security Notification</p>
+    </div>
+    <div class="content">
+      <p>Hello <strong>{{ user_name }}</strong>,</p>
+      <p>A successful login was detected on your Riverside Academy account.</p>
+
+      <div class="meta-box">
+        <p><strong>Date & Time:</strong> {{ login_time }}</p>
+        <p><strong>IP Address:</strong> {{ ip_address }}</p>
+        {% if device %}
+        <p><strong>Device / Browser:</strong> {{ device }}</p>
+        {% endif %}
+      </div>
+
+      <div class="warning">
+        <strong>Security Notice:</strong> If you did not authorize this login, please change your password immediately or reach out to Riverside Academy support at <a href="mailto:support@riversideacademy.edu" style="color: #0e3d2f;">support@riversideacademy.edu</a>.
+      </div>
+    </div>
+    <div class="footer">
+      Riverside Academy · Automated Security Service
+    </div>
+  </div>
+</body>
+</html>

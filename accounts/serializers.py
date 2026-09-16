@@ -7,7 +7,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.tokens import default_token_generator
 
-from .models import Profile, Role
+from .models import AdminNotification, AuditLog, PortalNotification, Profile, Role
 from academics.models import Subject
 from students.models import Student
 
@@ -247,13 +247,196 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
 
 class RoleAwareTokenObtainPairSerializer(TokenObtainPairSerializer):
-    """Embeds `role` in the JWT payload so the React app can pick the
-    right dashboard/redirect immediately after login without a second
-    round trip to /api/accounts/me/."""
+    """Embeds `role` in the JWT payload and supports authentication
+    by Email OR Student ID / Admission Number."""
+
+    def validate(self, attrs):
+        username = attrs.get(self.username_field)
+        if username:
+            # Check if this identifier is a Student admission number or Profile student_id
+            student = (
+                Student.objects.filter(admission_number__iexact=username)
+                .select_related("profile__user")
+                .first()
+            )
+            if student and student.profile and student.profile.user:
+                attrs[self.username_field] = student.profile.user.username
+            else:
+                profile = (
+                    Profile.objects.filter(student_id__iexact=username)
+                    .select_related("user")
+                    .first()
+                )
+                if profile and profile.user:
+                    attrs[self.username_field] = profile.user.username
+        data = super().validate(attrs)
+        data["role"] = getattr(getattr(self.user, "profile", None), "role", None)
+        data["email"] = self.user.email
+        data["user_id"] = self.user.id
+        return data
 
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        token["role"] = getattr(user.profile, "role", None)
+        token["role"] = getattr(getattr(user, "profile", None), "role", None)
         token["email"] = user.email
         return token
+
+
+class StudentRegisterSerializer(serializers.Serializer):
+    """
+    Dedicated Student Registration Serializer (Section 9 & 11).
+    Validates required fields, password strength, generates 24-hour verification token,
+    and sets up Student/Profile.
+    """
+
+    first_name = serializers.CharField(max_length=100)
+    last_name = serializers.CharField(max_length=100)
+    email = serializers.EmailField()
+    phone = serializers.CharField(max_length=30)
+    dob = serializers.DateField()
+    password = serializers.CharField(write_only=True, validators=[validate_password])
+    confirm_password = serializers.CharField(write_only=True)
+    student_id = serializers.CharField(max_length=50, required=False, allow_blank=True)
+    agree_terms = serializers.BooleanField(required=True)
+
+    def validate_email(self, value):
+        val = value.lower().strip()
+        if User.objects.filter(email__iexact=val).exists():
+            raise serializers.ValidationError(
+                "An account with this email address already exists."
+            )
+        return val
+
+    def validate(self, attrs):
+        if attrs.get("password") != attrs.get("confirm_password"):
+            raise serializers.ValidationError(
+                {"confirm_password": "Passwords do not match."}
+            )
+        if not attrs.get("agree_terms"):
+            raise serializers.ValidationError(
+                {
+                    "agree_terms": "You must agree to the Terms of Service and Privacy Policy."
+                }
+            )
+        return attrs
+
+    @transaction.atomic
+    def create(self, validated_data):
+        import secrets
+        from datetime import timedelta
+        from django.utils import timezone
+        from accounts.models import AdminNotificationType
+        from services import email_service, notification_service
+
+        first_name = validated_data["first_name"]
+        last_name = validated_data["last_name"]
+        email = validated_data["email"]
+        phone = validated_data["phone"]
+        dob = validated_data["dob"]
+        password = validated_data["password"]
+        student_id = validated_data.get("student_id", "").strip() or None
+
+        user = User.objects.create_user(
+            username=email,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            password=password,
+        )
+
+        verification_token = secrets.token_urlsafe(32)
+        token_expires = timezone.now() + timedelta(hours=24)
+
+        profile = user.profile
+        profile.role = Role.STUDENT
+        profile.phone = phone
+        profile.dob = dob
+        profile.student_id = student_id
+        profile.email_verification_token = verification_token
+        profile.email_verification_token_expires = token_expires
+        profile.save()
+
+        # Create or link student record
+        admission_num = student_id or f"ADM-{timezone.now().year}-{user.id:04d}"
+        Student.objects.get_or_create(
+            profile=profile,
+            defaults={"admission_number": admission_num, "dob": dob},
+        )
+
+        # Notify admin of new student registration
+        notification_service.notify_admin(
+            title="New Student Registered",
+            message=f"{first_name} {last_name} ({email}) created a student account.",
+            notification_type=AdminNotificationType.STUDENT_REGISTERED,
+            object_instance=user,
+            user=user,
+        )
+
+        # Dispatch verification email (non-blocking)
+        request = self.context.get("request")
+        email_service.send_verification_email(user, verification_token, request=request)
+
+        return user
+
+
+class AdminNotificationSerializer(serializers.ModelSerializer):
+    user_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = AdminNotification
+        fields = [
+            "id",
+            "title",
+            "message",
+            "notification_type",
+            "user",
+            "user_name",
+            "object_id",
+            "is_read",
+            "created_at",
+        ]
+        read_only_fields = ["id", "created_at"]
+
+    def get_user_name(self, obj):
+        return obj.user.get_full_name() or obj.user.username if obj.user else "System"
+
+
+class PortalNotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PortalNotification
+        fields = [
+            "id",
+            "title",
+            "message",
+            "notification_type",
+            "link",
+            "is_read",
+            "created_at",
+        ]
+        read_only_fields = ["id", "created_at"]
+
+
+class AuditLogSerializer(serializers.ModelSerializer):
+    actor_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = AuditLog
+        fields = [
+            "id",
+            "actor",
+            "actor_name",
+            "action",
+            "model_name",
+            "object_id",
+            "description",
+            "ip_address",
+            "user_agent",
+            "created_at",
+        ]
+        read_only_fields = ["id", "created_at"]
+
+    def get_actor_name(self, obj):
+        return (
+            obj.actor.get_full_name() or obj.actor.username if obj.actor else "System"
+        )

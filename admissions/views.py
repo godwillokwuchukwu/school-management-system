@@ -94,6 +94,17 @@ class AdmissionApplicationViewSet(viewsets.ModelViewSet):
             application.status = ApplicationStatus.SUBMITTED
             application.submitted_at = timezone.now()
             application.save(update_fields=["reference", "status", "submitted_at"])
+
+            from services import notification_service
+            from accounts.models import AdminNotificationType
+
+            notification_service.notify_admin(
+                title=f"New Admission Application: {application.reference}",
+                message=f"{application.student_first_name} {application.student_last_name} submitted application for {application.class_applying_for}.",
+                notification_type=AdminNotificationType.APPLICATION_SUBMITTED,
+                object_instance=application,
+                user=request.user,
+            )
         return Response(
             AdmissionApplicationDetailSerializer(application).data,
             status=status.HTTP_200_OK,
@@ -120,7 +131,18 @@ class ApplicationDocumentListCreateView(generics.ListCreateAPIView):
         return AdmissionDocument.objects.filter(application=self._get_application())
 
     def perform_create(self, serializer):
-        serializer.save(application=self._get_application())
+        app = self._get_application()
+        doc = serializer.save(application=app)
+        from services import notification_service
+        from accounts.models import AdminNotificationType
+
+        notification_service.notify_admin(
+            title=f"Document Uploaded: {app.reference}",
+            message=f"Document ({doc.get_document_type_display()}) uploaded for {app.student_first_name} {app.student_last_name}.",
+            notification_type=AdminNotificationType.DOCUMENT_UPLOADED,
+            object_instance=app,
+            user=self.request.user,
+        )
 
 
 class AdmissionApplicationPublicStatusView(generics.RetrieveAPIView):
@@ -305,6 +327,25 @@ class AdmissionApplicationAdminViewSet(
             request=request,
         )
         return Response(AdmissionApplicationDetailSerializer(application).data)
+
+    @action(detail=True, methods=["post"])
+    def move_to_payment(self, request, pk=None):
+        from services import admission_service
+
+        application = self.get_object()
+        amount = float(request.data.get("amount", 150000.0))
+        due_date = request.data.get("due_date", None)
+        notes = request.data.get("notes", "")
+
+        updated = admission_service.move_to_payment(
+            application=application,
+            admin_user=request.user,
+            amount=amount,
+            due_date=due_date,
+            notes=notes,
+            request=request,
+        )
+        return Response(AdmissionApplicationDetailSerializer(updated).data)
 
 
 class ParentRelationshipRequestViewSet(

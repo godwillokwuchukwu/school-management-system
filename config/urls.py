@@ -17,6 +17,9 @@ from accounts.views import (
     PasswordResetConfirmView,
     PasswordResetRequestView,
     RegisterView,
+    ResendVerificationView,
+    StudentRegisterView,
+    VerifyEmailView,
 )
 
 urlpatterns = [
@@ -24,9 +27,32 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     # --- Auth ---
     path("api/auth/login/", LoginView.as_view(), name="token_obtain_pair"),
-    # Public self-registration is intentionally disabled -- see RegisterView's
-    # docstring and GAP_ANALYSIS_AND_ROADMAP.md item #2.
     path("api/auth/register/", RegisterView.as_view(), name="register"),
+    path(
+        "api/auth/student/register/",
+        StudentRegisterView.as_view(),
+        name="student_register",
+    ),
+    path(
+        "api/auth/verify-email/<str:token>/",
+        VerifyEmailView.as_view(),
+        name="api_verify_email",
+    ),
+    path(
+        "api/auth/resend-verification/",
+        ResendVerificationView.as_view(),
+        name="api_resend_verification",
+    ),
+    path(
+        "accounts/verify-email/<str:token>/",
+        VerifyEmailView.as_view(),
+        name="web_verify_email",
+    ),
+    path(
+        "accounts/resend-verification/",
+        ResendVerificationView.as_view(),
+        name="web_resend_verification",
+    ),
     path(
         "api/auth/password-reset/",
         PasswordResetRequestView.as_view(),

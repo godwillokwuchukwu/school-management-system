@@ -67,8 +67,8 @@ function Header({ school }) {
             ))}
           </nav>
           <div className="bfa-header-actions">
-            <Link to="/admissions/apply" className="bfa-btn bfa-btn-gold">Enroll Now</Link>
-            <Link to="/portal" className="bfa-btn bfa-btn-outline">Portal Login</Link>
+            <Link to="/login" className="bfa-btn bfa-btn-gold">Login</Link>
+            <Link to="/portal" className="bfa-btn bfa-btn-outline">Portal</Link>
             <button className="bfa-mobile-toggle" onClick={() => setOpen(!open)} aria-label="Toggle navigation">
               {open ? '✕' : '☰'}
             </button>

@@ -46,11 +46,27 @@ class Profile(models.Model):
     address = models.CharField(max_length=255, blank=True)
     dob = models.DateField(null=True, blank=True)
     photo = models.ImageField(upload_to="profile_photos/", null=True, blank=True)
+    student_id = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        unique=True,
+        help_text="Custom student identifier if assigned before enrollment",
+    )
+    email_verification_token = models.CharField(
+        max_length=64, blank=True, null=True, unique=True
+    )
+    email_verification_token_expires = models.DateTimeField(null=True, blank=True)
+    email_verified_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        indexes = [models.Index(fields=["role"])]
+        indexes = [
+            models.Index(fields=["role"]),
+            models.Index(fields=["student_id"]),
+            models.Index(fields=["email_verification_token"]),
+        ]
 
     def save(self, *args, **kwargs):
         if self.school_id is None:
@@ -82,9 +98,7 @@ class Profile(models.Model):
 class AuditLog(models.Model):
     """
     Generic audit trail for sensitive mutations (grades, attendance,
-    message deletions, etc). Apps write to this via
-    accounts.audit.record(...) rather than importing the model directly,
-    so the audit call sites stay one-liners.
+    message deletions, logins, admissions).
     """
 
     actor = models.ForeignKey(
@@ -95,12 +109,14 @@ class AuditLog(models.Model):
     )
     action = models.CharField(
         max_length=100
-    )  # e.g. "grade.update", "attendance.bulk_mark"
+    )  # e.g. "auth.login", "admission.move_to_payment"
     model_name = models.CharField(max_length=100)
     object_id = models.CharField(max_length=64)
+    description = models.TextField(blank=True)
     old_value = models.JSONField(null=True, blank=True)
     new_value = models.JSONField(null=True, blank=True)
     ip_address = models.GenericIPAddressField(null=True, blank=True)
+    user_agent = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -112,6 +128,74 @@ class AuditLog(models.Model):
 
     def __str__(self):
         return f"{self.action} on {self.model_name}#{self.object_id} by {self.actor}"
+
+
+class AdminNotificationType(models.TextChoices):
+    STUDENT_REGISTERED = "student_registered", "Student Registered"
+    APPLICATION_SUBMITTED = "application_submitted", "Application Submitted"
+    DOCUMENT_UPLOADED = "document_uploaded", "Document Uploaded"
+    PAYMENT_COMPLETED = "payment_completed", "Payment Completed"
+    APPLICATION_UPDATED = "application_updated", "Application Updated"
+    INFO = "info", "Information"
+
+
+class AdminNotification(models.Model):
+    title = models.CharField(max_length=200)
+    message = models.TextField()
+    notification_type = models.CharField(
+        max_length=30,
+        choices=AdminNotificationType.choices,
+        default=AdminNotificationType.INFO,
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="admin_notifications",
+    )
+    content_type = models.ForeignKey(
+        "contenttypes.ContentType",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    object_id = models.CharField(max_length=64, blank=True)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["is_read", "-created_at"]),
+            models.Index(fields=["notification_type"]),
+        ]
+
+    def __str__(self):
+        return f"[{self.notification_type}] {self.title}"
+
+
+class PortalNotification(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="portal_notifications",
+    )
+    title = models.CharField(max_length=200)
+    message = models.TextField()
+    notification_type = models.CharField(max_length=30, default="general")
+    link = models.CharField(max_length=255, blank=True)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["user", "is_read", "-created_at"]),
+        ]
+
+    def __str__(self):
+        return f"Notification for {self.user}: {self.title}"
 
 
 class RegistrationInvitation(models.Model):

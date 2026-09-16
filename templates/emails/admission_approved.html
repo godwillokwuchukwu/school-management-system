@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Your Riverside Academy admission application has been approved</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #faf7f2; color: #1a2f26; margin: 0; padding: 40px 20px; }
+    .container { max-width: 580px; margin: 0 auto; background: #ffffff; border-radius: 12px; border: 1px solid #e7e2d9; overflow: hidden; }
+    .header { background: #0e3d2f; color: #ffffff; padding: 32px; text-align: center; }
+    .header h1 { margin: 0; font-size: 24px; }
+    .content { padding: 36px 32px; font-size: 15px; line-height: 1.6; }
+    .btn-container { text-align: center; margin: 30px 0; }
+    .btn { display: inline-block; background-color: #c5a059; color: #0e3d2f; font-weight: bold; text-decoration: none; padding: 14px 34px; border-radius: 50px; font-size: 16px; }
+    .footer { background: #f4f0e8; padding: 20px 32px; font-size: 12px; color: #6b7c74; border-top: 1px solid #e7e2d9; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Riverside Academy</h1>
+      <p style="margin: 6px 0 0; color: #c5a059;">Admission Committee</p>
+    </div>
+    <div class="content">
+      <p>Dear <strong>{{ student_name }}</strong>,</p>
+      <p>We are delighted to inform you that your application for admission to Riverside Academy (Reference: <strong>{{ reference }}</strong>) has been <strong>Approved</strong>.</p>
+      <p>Please log in to your Student Portal account to check the next steps and view upcoming onboarding details.</p>
+      <div class="btn-container">
+        <a href="{{ portal_url }}" class="btn">Go to Student Portal</a>
+      </div>
+    </div>
+    <div class="footer">
+      Riverside Academy Admissions Office · Lekki Phase 1, Lagos, Nigeria
+    </div>
+  </div>
+</body>
+</html>

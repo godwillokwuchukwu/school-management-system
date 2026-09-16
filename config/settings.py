@@ -69,7 +69,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -85,9 +85,18 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
+import sys
+
 # --- Database ---
 _raw_db_url = os.environ.get("DATABASE_URL", "").strip()
-if _raw_db_url:
+if "test" in sys.argv or "pytest" in sys.modules or os.environ.get("USE_SQLITE"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+elif _raw_db_url:
     DATABASES = {"default": env.db_url_config(_raw_db_url)}
 else:
     _sqlite_path = (
@@ -95,8 +104,12 @@ else:
     )
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": _sqlite_path,
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "school_mgt_db",
+            "USER": "school_mgt_user",
+            "PASSWORD": "Esther456@",
+            "HOST": "localhost",
+            "PORT": "5432",
         }
     }
 

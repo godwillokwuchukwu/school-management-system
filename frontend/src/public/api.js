@@ -77,7 +77,24 @@ export const publicApi = {
   isAuthenticated: () => Boolean(getAccessToken()),
   logout: clearTokens,
 
-  // --- Applicant account (Stage 2: the ONLY self-service registration) ---
+  // --- Student Portal Auth ---
+  async studentRegister(body) {
+    return request('/auth/student/register/', { method: 'POST', body: JSON.stringify(body) }, false)
+  },
+  async verifyEmail(token) {
+    return request(`/auth/verify-email/${token}/`, {}, false)
+  },
+  async resendVerification(email) {
+    return request('/auth/resend-verification/', { method: 'POST', body: JSON.stringify({ email }) }, false)
+  },
+  async requestPasswordReset(email) {
+    return request('/auth/password-reset/', { method: 'POST', body: JSON.stringify({ email }) }, false)
+  },
+  async getNotifications() {
+    return request('/accounts/notifications/')
+  },
+
+  // --- Applicant account ---
   async register(body) {
     return request('/auth/register/', { method: 'POST', body: JSON.stringify(body) }, false)
   },

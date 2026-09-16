@@ -1,0 +1,584 @@
+/* ==========================================================================
+   Riverside Academy - Student Authentication & Registration Portal Styles
+   Matches Reference Design in media_1789559623144.png
+   ========================================================================== */
+
+:root {
+  --bfa-green-deep: #0e3d2f;
+  --bfa-green-dark: #09281f;
+  --bfa-green-card: #134e3f;
+  --bfa-gold-accent: #b5883e;
+  --bfa-gold-light: #c5a059;
+  --bfa-gold-hover: #9f7431;
+  --bfa-cream-bg: #faf7f2;
+  --bfa-card-bg: #ffffff;
+  --bfa-border-color: #e5e0d5;
+  --bfa-input-border: #d4cdc1;
+  --bfa-text-main: #1a2f26;
+  --bfa-text-muted: #5e7368;
+}
+
+.student-portal-wrapper {
+  background-color: var(--bfa-cream-bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   HERO SECTION
+   -------------------------------------------------------------------------- */
+.student-portal-hero {
+  position: relative;
+  background: linear-gradient(135deg, #09281f 0%, #0e3d2f 55%, #134e3f 100%);
+  color: #ffffff;
+  padding: 60px 24px 75px;
+  overflow: hidden;
+}
+
+.student-hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.student-hero-text {
+  max-width: 600px;
+}
+
+.student-hero-eyebrow {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #8ed6b7;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.student-hero-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0 0 16px 0;
+  color: #ffffff;
+}
+
+.student-hero-desc {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #d2e4db;
+  margin: 0;
+}
+
+.student-hero-decor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+}
+
+.student-hero-motto {
+  font-family: 'Dancing Script', 'Caveat', 'Brush Script MT', cursive;
+  font-size: 28px;
+  color: #f7dca3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transform: rotate(-3deg);
+}
+
+.student-motto-curve {
+  width: 140px;
+  height: 16px;
+  margin-top: -4px;
+}
+
+.student-hero-image-frame {
+  width: 320px;
+  height: 190px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  border: 2px solid rgba(197, 160, 89, 0.4);
+}
+
+.student-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.student-hero-wave {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  line-height: 0;
+  z-index: 1;
+}
+
+.student-hero-wave svg {
+  width: 100%;
+  height: 50px;
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   AUTHENTICATION CARDS SECTION
+   -------------------------------------------------------------------------- */
+.student-auth-section {
+  padding: 40px 20px 70px;
+  background-color: var(--bfa-cream-bg);
+  position: relative;
+  z-index: 3;
+}
+
+.student-auth-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.22fr;
+  gap: 32px;
+  align-items: start;
+}
+
+/* Card Styling */
+.student-card {
+  background: var(--bfa-card-bg);
+  border: 1px solid var(--bfa-border-color);
+  border-radius: 18px;
+  padding: 36px 32px;
+  box-shadow: 0 12px 36px rgba(14, 61, 47, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.student-card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+.student-avatar-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #e7f3ee;
+  color: var(--bfa-green-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.student-card-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--bfa-text-main);
+  margin: 0 0 4px 0;
+}
+
+.student-card-subtitle {
+  font-size: 13.5px;
+  color: var(--bfa-text-muted);
+  margin: 0;
+}
+
+/* Form Controls */
+.student-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.student-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.student-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.student-label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--bfa-text-main);
+}
+
+.student-sub-hint {
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--bfa-text-muted);
+}
+
+.student-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.student-input-icon {
+  position: absolute;
+  left: 14px;
+  color: #8c9b93;
+  pointer-events: none;
+}
+
+.student-input {
+  width: 100%;
+  height: 46px;
+  padding: 10px 14px 10px 42px;
+  border: 1px solid var(--bfa-input-border);
+  border-radius: 9px;
+  font-size: 14px;
+  color: var(--bfa-text-main);
+  background-color: #ffffff;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.student-input:focus {
+  outline: none;
+  border-color: var(--bfa-green-deep);
+  box-shadow: 0 0 0 3.5px rgba(14, 61, 47, 0.12);
+}
+
+.student-input::placeholder {
+  color: #a4b0a8;
+  font-size: 13.5px;
+}
+
+.student-eye-toggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #8c9b93;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.student-eye-toggle:hover {
+  color: var(--bfa-green-deep);
+}
+
+/* Checkbox & Options */
+.student-auth-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13.5px;
+  margin-top: 2px;
+}
+
+.student-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--bfa-text-main);
+  cursor: pointer;
+  font-size: 13.5px;
+}
+
+.student-checkbox-label input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--bfa-green-deep);
+  cursor: pointer;
+}
+
+.student-forgot-link {
+  color: var(--bfa-green-deep);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.student-forgot-link:hover {
+  text-decoration: underline;
+}
+
+.student-checkbox-group {
+  margin: 4px 0 2px;
+}
+
+.student-checkbox-group a {
+  color: var(--bfa-green-deep);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* Buttons */
+.student-btn {
+  width: 100%;
+  height: 48px;
+  border-radius: 9px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.student-btn:active {
+  transform: translateY(1px);
+}
+
+.student-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.student-btn-green {
+  background-color: var(--bfa-green-deep);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(14, 61, 47, 0.2);
+}
+
+.student-btn-green:hover:not(:disabled) {
+  background-color: var(--bfa-green-dark);
+}
+
+.student-btn-gold {
+  background-color: var(--bfa-gold-accent);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(181, 136, 62, 0.25);
+}
+
+.student-btn-gold:hover:not(:disabled) {
+  background-color: var(--bfa-gold-hover);
+}
+
+/* Switch Links */
+.student-switch-link {
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--bfa-text-muted);
+  margin-top: 4px;
+}
+
+.student-switch-link a {
+  color: var(--bfa-green-deep);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.student-switch-link a:hover {
+  text-decoration: underline;
+}
+
+/* Security Trust Badge (Left Card) */
+.student-trust-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #edf7f2;
+  border: 1px solid #d4ece0;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-top: 10px;
+  font-size: 12.5px;
+  color: #1a5639;
+  line-height: 1.45;
+}
+
+.student-trust-icon {
+  color: #16a34a;
+  flex-shrink: 0;
+}
+
+/* Password Strength & Match Feedback */
+.student-strength-bar-wrap {
+  margin-top: 6px;
+}
+
+.student-strength-bar {
+  height: 5px;
+  border-radius: 3px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.student-strength-label {
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 4px;
+  display: block;
+}
+
+.student-match-badge {
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 4px;
+  display: block;
+}
+
+.student-match-badge.match {
+  color: #16a34a;
+}
+
+.student-match-badge.mismatch {
+  color: #dc2626;
+}
+
+/* Alerts */
+.student-alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+.student-alert-error {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.student-alert-success {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+/* --------------------------------------------------------------------------
+   PORTAL FEATURES SECTION
+   -------------------------------------------------------------------------- */
+.student-features-section {
+  background: #ffffff;
+  border-top: 1px solid var(--bfa-border-color);
+  padding: 60px 24px;
+}
+
+.student-features-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.student-features-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 30px;
+  color: var(--bfa-text-main);
+  margin: 0 0 10px 0;
+}
+
+.student-features-subtitle {
+  font-size: 15px;
+  color: var(--bfa-text-muted);
+  max-width: 650px;
+  margin: 0 auto 40px;
+  line-height: 1.5;
+}
+
+.student-features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  text-align: left;
+}
+
+.student-feature-box {
+  background: var(--bfa-cream-bg);
+  border: 1px solid var(--bfa-border-color);
+  border-radius: 12px;
+  padding: 24px 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.student-feature-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(14, 61, 47, 0.08);
+}
+
+.student-feature-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.student-feature-box h4 {
+  font-size: 16px;
+  color: var(--bfa-text-main);
+  margin: 0 0 8px 0;
+  font-weight: 700;
+}
+
+.student-feature-box p {
+  font-size: 13.5px;
+  color: var(--bfa-text-muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE DESIGN (Tablets & Mobile)
+   -------------------------------------------------------------------------- */
+@media (max-width: 992px) {
+  .student-auth-container {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+  }
+
+  .student-hero-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
+  }
+
+  .student-hero-text {
+    max-width: 100%;
+  }
+
+  .student-features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .student-portal-hero {
+    padding: 40px 16px 60px;
+  }
+
+  .student-hero-title {
+    font-size: 34px;
+  }
+
+  .student-hero-image-frame {
+    width: 100%;
+    max-width: 280px;
+    height: 160px;
+  }
+
+  .student-card {
+    padding: 24px 20px;
+    border-radius: 14px;
+  }
+
+  .student-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .student-features-grid {
+    grid-template-columns: 1fr;
+  }
+}
