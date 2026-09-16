@@ -37,6 +37,9 @@ export default function PublicApp() {
         <Route path="student/login" element={<StudentAuth />} />
         <Route path="student/register" element={<StudentAuth />} />
         <Route path="register/parent" element={<ParentRegister />} />
+        <Route path="parent/register" element={<ParentRegister />} />
+        <Route path="parents/register" element={<ParentRegister />} />
+        <Route path="parent/login" element={<ParentRegister />} />
         <Route path="careers" element={<Careers />} />
         <Route path="news" element={<News />} />
         <Route path="news/:slug" element={<NewsDetail />} />

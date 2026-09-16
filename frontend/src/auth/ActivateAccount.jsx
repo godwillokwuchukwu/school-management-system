@@ -60,7 +60,7 @@ export default function ActivateAccount({ token, onActivated }) {
       </div>
       <div className="auth-card">
         <p className="eyebrow">ACCOUNT SETUP</p>
-        <h1>Welcome to Schoolhub.</h1>
+        <h1>Welcome to Riverside Academy.</h1>
         <p className="muted">Set your password to activate your account and access the portal.</p>
 
         <form onSubmit={submit}>
