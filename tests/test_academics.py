@@ -10,6 +10,7 @@ User = get_user_model()
 @pytest.fixture
 def admin_client():
     client = APIClient()
+    admin = User.objects.create_superuser("admin@example.com", "admin@example.com", "Pass12345!")
     admin = User.objects.create_superuser(
         "admin@example.com", "admin@example.com", "Pass12345!"
     )
@@ -22,6 +23,7 @@ def admin_client():
 @pytest.fixture
 def teacher_client():
     client = APIClient()
+    teacher = User.objects.create_user("teacher@example.com", "teacher@example.com", "Pass12345!")
     teacher = User.objects.create_user(
         "teacher@example.com", "teacher@example.com", "Pass12345!"
     )
@@ -34,11 +36,13 @@ def teacher_client():
 @pytest.fixture
 def student_client():
     client = APIClient()
+    student_user = User.objects.create_user("student@example.com", "student@example.com", "Pass12345!")
     student_user = User.objects.create_user(
         "student@example.com", "student@example.com", "Pass12345!"
     )
     student_user.profile.role = "student"
     student_user.profile.save()
+    student = Student.objects.create(profile=student_user.profile, admission_number="ADM-ACAD-01", dob="2010-01-01")
     student = Student.objects.create(
         profile=student_user.profile, admission_number="ADM-ACAD-01", dob="2010-01-01"
     )
@@ -49,6 +53,7 @@ def student_client():
 @pytest.mark.django_db
 def test_subject_crud(admin_client):
     client, _ = admin_client
+    resp = client.post("/api/academics/subjects/", {"name": "Mathematics", "code": "MTH101", "description": "Core Math"}, format="json")
     resp = client.post(
         "/api/academics/subjects/",
         {"name": "Mathematics", "code": "MTH101", "description": "Core Math"},
@@ -66,6 +71,7 @@ def test_subject_crud(admin_client):
 def test_class_crud_and_roster(admin_client, teacher_client, student_client):
     client, _ = admin_client
     subj = Subject.objects.create(name="English", code="ENG101")
+    cls_resp = client.post("/api/academics/classes/", {"name": "Grade 10A", "code": "G10A", "academic_year": "2026/2027", "subjects": [subj.id]}, format="json")
     cls_resp = client.post(
         "/api/academics/classes/",
         {
@@ -80,6 +86,7 @@ def test_class_crud_and_roster(admin_client, teacher_client, student_client):
     class_id = cls_resp.data["id"]
 
     _, _, student = student_client
+    enroll_resp = client.post("/api/academics/enrollments/", {"student": student.id, "school_class": class_id, "academic_year": "2026/2027"}, format="json")
     enroll_resp = client.post(
         "/api/academics/enrollments/",
         {"student": student.id, "school_class": class_id, "academic_year": "2026/2027"},
@@ -101,6 +108,8 @@ def test_grades_and_schedules(teacher_client, student_client):
     s_client, student_user, student = student_client
 
     subj = Subject.objects.create(name="Biology", code="BIO101")
+    school_class = Class.objects.create(name="Grade 11B", code="G11B", academic_year="2026/2027")
+    enrollment = Enrollment.objects.create(student=student, school_class=school_class, academic_year="2026/2027")
     school_class = Class.objects.create(
         name="Grade 11B", code="G11B", academic_year="2026/2027"
     )
@@ -111,6 +120,7 @@ def test_grades_and_schedules(teacher_client, student_client):
     # Teacher creates grade
     grade_resp = t_client.post(
         "/api/academics/grades/",
+        {"enrollment": enrollment.id, "subject": subj.id, "score": 92.5, "comments": "Excellent", "graded_by": teacher.id},
         {
             "enrollment": enrollment.id,
             "subject": subj.id,
@@ -130,6 +140,7 @@ def test_grades_and_schedules(teacher_client, student_client):
     # Teacher creates schedule
     sched_resp = t_client.post(
         "/api/academics/schedules/",
+        {"school_class": school_class.id, "subject": subj.id, "day_of_week": "monday", "start_time": "08:00:00", "end_time": "09:00:00", "room": "Lab 1"},
         {
             "school_class": school_class.id,
             "subject": subj.id,
@@ -145,3 +156,4 @@ def test_grades_and_schedules(teacher_client, student_client):
     # Student views schedule
     s_sched_resp = s_client.get("/api/academics/schedules/")
     assert s_sched_resp.status_code == 200
+

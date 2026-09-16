@@ -4,6 +4,7 @@ Consolidates all login, registration, verification, password reset,
 and portal authentication views, serializers, and forms in one single module.
 """
 
+from accounts.auth.views import (
 from accounts.views import (
     LoginView,
     StudentRegisterView,
@@ -11,11 +12,13 @@ from accounts.views import (
     ResendVerificationView,
     RegisterView,
     PublicApplicantRegisterView,
+    ActivateAccountView,
     AccountActivateView,
     PasswordResetRequestView,
     PasswordResetConfirmView,
 )
 
+from accounts.auth.serializers import (
 ActivateAccountView = AccountActivateView
 
 from accounts.serializers import (
@@ -28,6 +31,7 @@ from accounts.serializers import (
     PasswordResetConfirmSerializer,
 )
 
+from accounts.auth.forms import (
 from accounts.forms import (
     StudentLoginForm,
     StudentRegistrationForm,

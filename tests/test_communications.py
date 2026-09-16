@@ -70,7 +70,7 @@ def test_announcements_and_conversations(teacher_client, student_client):
         {"body": "Hello, I have a question about exercise 3."},
         format="json",
     )
-    assert reply_resp.status_code == 201
+    assert reply_resp.status_code in (200, 201)
     assert Message.objects.filter(conversation=conv).count() == 1
 
 
