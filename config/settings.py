@@ -98,10 +98,16 @@ if "test" in sys.argv or "pytest" in sys.modules or os.environ.get("USE_SQLITE")
     }
 elif _raw_db_url:
     DATABASES = {"default": env.db_url_config(_raw_db_url)}
+elif os.environ.get("VERCEL"):
+    import tempfile
+
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": Path(tempfile.gettempdir()) / "db.sqlite3",
+        }
+    }
 else:
-    _sqlite_path = (
-        Path("/tmp/db.sqlite3") if os.environ.get("VERCEL") else BASE_DIR / "db.sqlite3"
-    )
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",

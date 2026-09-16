@@ -50,12 +50,24 @@ async function refreshAccessToken() {
 async function request(path, options = {}, canRefresh = true) {
   const headers = new Headers(options.headers || {})
   const token = getAccessToken()
-  if (token) headers.set('Authorization', `Bearer ${token}`)
+  const isPublicRoute = path.startsWith('/public/') || path.startsWith('/auth/')
+  if (token && (!isPublicRoute || options.requiresAuth)) {
+    headers.set('Authorization', `Bearer ${token}`)
+  }
   if (options.body && !(options.body instanceof FormData)) headers.set('Content-Type', 'application/json')
 
   const response = await fetch(`${API_URL}${path}`, { ...options, headers })
-  if (response.status === 401 && canRefresh && await refreshAccessToken()) {
-    return request(path, options, false)
+  if (response.status === 401) {
+    if (canRefresh && (await refreshAccessToken())) {
+      return request(path, options, false)
+    }
+    clearTokens()
+    if (isPublicRoute && !options.requiresAuth) {
+      headers.delete('Authorization')
+      const retryResp = await fetch(`${API_URL}${path}`, { ...options, headers })
+      const retryPayload = retryResp.status === 204 ? null : await retryResp.json().catch(() => null)
+      if (retryResp.ok) return retryPayload
+    }
   }
 
   const payload = response.status === 204 ? null : await response.json().catch(() => null)

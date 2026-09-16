@@ -54,12 +54,16 @@ async function request(path, options = {}, canRefresh = true) {
   if (options.body && !(options.body instanceof FormData)) headers.set('Content-Type', 'application/json')
 
   const response = await fetch(`${API_URL}${path}`, { ...options, headers })
-  if (response.status === 401 && canRefresh && await refreshAccessToken()) {
-    return request(path, options, false)
+  if (response.status === 401) {
+    if (canRefresh && (await refreshAccessToken())) {
+      return request(path, options, false)
+    }
+    clearTokens()
   }
 
   const payload = response.status === 204 ? null : await response.json().catch(() => null)
   if (!response.ok) {
+    if (response.status === 401) clearTokens()
     const detail = payload?.detail || Object.values(payload || {})?.flat?.()?.[0] || `Request failed (${response.status})`
     throw new ApiError(String(detail), response.status, payload)
   }
